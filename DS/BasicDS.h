@@ -27,6 +27,10 @@ namespace MyDses{
             T& last(){
                 return _pArray[_capacity-1];
             }
+
+            void operator =(*this cur, T& other){
+                
+            }
     };
 
     template <class T>
@@ -38,7 +42,11 @@ namespace MyDses{
             {}
 
             void add(T& elem){
-                if(_curIndex >= _capacity)
+                if(_curIndex >= _capacity){ 
+                    //_capacity + _curIndex/2 = newCapacity 
+                    std::unique_ptr<T[]> pNewArr = std::make_unique<T[]>(_capacity + _curIndex/2);
+
+                }
 
 
 
