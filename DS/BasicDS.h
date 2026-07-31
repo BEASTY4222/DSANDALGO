@@ -5,54 +5,86 @@ namespace MyDses{
     template <class T>
 
     class Array{
-        size_t _capacity;
         std::unique_ptr<T[]> _pArray;
 
         public:
-            Array(size_t capacity) : _capacity(capacity) , _pArray(std::make_unique<T[]>(capacity))
-            {}
+            size_t capacity;
+            Array(size_t capacity) : capacity(capacity) , _pArray(std::make_unique<T[]>(capacity)){}
 
             T& operator [](size_t index){
-                if(index >= _capacity || index < 0)throw std::out_of_range("Out of range");
+                if(index >= capacity || index < 0)throw std::out_of_range("Out of range");
 
                 return _pArray[index];
             }
 
-            size_t size()const {return _capacity;}
+            size_t size() const { return capacity; }
+            T& first() {return _pArray[0];}
+            T& last(){return _pArray[capacity-1];}
 
-            T& first() { 
-                return _pArray[0];
+            Array& operator=(const Array& other) {
+                //Compare addresses
+                if(this != &other){
+                    std::unique_ptr<T[]> pNewArr = std::make_unique<T[]>(other.capacity);
+
+                    for(size_t i = 0;i < other.capacity;++i)
+                        pNewArr[i] = other._pArray[i]; 
+
+                    _pArray = pNewArr;
+                    this->capacity = other.capacity;
+
+                    return *this;
+                }
+
+                return *this;
             }
 
-            T& last(){
-                return _pArray[_capacity-1];
+            Array(const Array& other) : capacity(other.capacity), _pArray(std::make_unique<T[]>(other.capacity)) {
+                for(size_t i = 0; i < capacity; ++i)
+                    _pArray[i] = other._pArray[i];
             }
 
-            void operator =(*this cur, T& other){
+            void swap(Array& other) {
+                // Exchange capacities
+                std::swap(this->capacity, other.capacity);
                 
+                // Exchange unique pointers
+                // This swaps ownership - no data is copied!
+                this->_pArray.swap(other._pArray);
             }
     };
 
     template <class T>
-    class DArray : public Array<T>{
+    class DArray {
         size_t _curIndex;
+        Array<T> array; 
 
         public:
-            DArray(size_t capacity) : Array<T>(capacity), _curIndex(0)
+            DArray(size_t capacity) : array(capacity), _curIndex(0)
             {}
 
-            void add(T& elem){
-                if(_curIndex >= _capacity){ 
-                    //_capacity + _curIndex/2 = newCapacity 
-                    std::unique_ptr<T[]> pNewArr = std::make_unique<T[]>(_capacity + _curIndex/2);
+            void add(const T& elem){
+                if(_curIndex >= array.size() || array.size() <= 0){ 
+                    //capacity + _curIndex/2 = newCapacity 
+                    Array<T> newArr(array.size() + _curIndex/2);
 
+                    for(size_t i = 0;i < array.size();++i)
+                        newArr[i] = array[i];
+
+                    array.swap(newArr);
                 }
 
-
-
-                _pArray[_curIndex] = elem;
+                array[_curIndex] = elem;
                 _curIndex++;
             }
 
+            size_t size() const { return array.size(); }
+            T& first() {return array[0];}
+            T& last(){return array[array.size()-1];}
+
+            T& operator [](size_t index){
+                if(index >= array.size() || index < 0)throw std::out_of_range("Out of range");
+
+                return array[index];
+            }
     };
 }

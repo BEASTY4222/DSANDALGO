@@ -32,6 +32,29 @@ int main(){
     std::cout << "Last elem: " << myArr.last() << std::endl;
 
     std::cout << "Dynamic arrays[] heap allocation \n";
+    MyDses::DArray<int> myDArr(5);
+    myDArr.add(1);
+    myDArr.add(2);
+    myDArr.add(3);
+    myDArr.add(4);
+    myDArr.add(5);
+
+    for(size_t i = 0;i < myArr.size();++i){
+        std::cout << myDArr[i] << std::endl;    
+    }
+
+    std::cout << "First elem: " << myDArr.first() << std::endl;
+    std::cout << "Last elem: " << myDArr.last() << std::endl;
+    std::cout << "Currently at the max \n";
+
+    myDArr.add(6);
+
+    for(size_t i = 0;i < myDArr.size();++i){
+        std::cout << myDArr[i] << std::endl;    
+    }
+
+    std::cout << "Dynamicly allocated more space for 6 \n";
+
 
     return 0;
 }
