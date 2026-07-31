@@ -1,3 +1,6 @@
+#define Vector DArray
+
+
 #include <iostream>
 #include "DS/BasicDS.h"
 
@@ -32,7 +35,7 @@ int main(){
     std::cout << "Last elem: " << myArr.last() << std::endl;
 
     std::cout << "Dynamic arrays[] heap allocation \n";
-    MyDses::DArray<int> myDArr(5);
+    MyDses::Vector<int> myDArr(5);
     myDArr.add(1);
     myDArr.add(2);
     myDArr.add(3);

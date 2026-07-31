@@ -3,7 +3,6 @@
 
 namespace MyDses{
     template <class T>
-
     class Array{
         std::unique_ptr<T[]> _pArray;
 
@@ -59,8 +58,8 @@ namespace MyDses{
         Array<T> array; 
 
         public:
-            DArray(size_t capacity) : array(capacity), _curIndex(0)
-            {}
+            DArray(size_t capacity) : array(capacity), _curIndex(0){}
+            DArray() : array(0), _curIndex(0){}
 
             void add(const T& elem){
                 if(_curIndex >= array.size() || array.size() <= 0){ 
@@ -86,5 +85,26 @@ namespace MyDses{
 
                 return array[index];
             }
+    };
+
+
+    template <class T>
+    class Stack{
+        size_t _capacity;
+        size_t _curIndex;
+        DArray<T> _pStack;
+
+        public:
+
+        Stack(size_t capacity) : _capacity(capacity), _curIndex(0), _pStack(capacity){}
+        Stack() : _capacity(0), _curIndex(0), _pStack(){}
+
+        void push(const T& element){
+
+        }
+
+        size_t size() const{return _capacity;}
+
+
     };
 }
