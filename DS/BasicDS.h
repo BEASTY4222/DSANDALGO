@@ -61,7 +61,8 @@ namespace MyDses{
             DArray(size_t capacity) : array(capacity), _curIndex(0){}
             DArray() : array(0), _curIndex(0){}
 
-            void add(const T& elem){
+            //o(1)
+            void add_back(const T& elem){
                 if(_curIndex >= array.size() || array.size() <= 0){ 
                     //capacity + _curIndex/2 = newCapacity 
                     Array<T> newArr(array.size() + _curIndex/2);
@@ -74,6 +75,37 @@ namespace MyDses{
 
                 array[_curIndex] = elem;
                 _curIndex++;
+            }
+            
+            //o(n)
+            void add_front(const T& elem){
+                if(_curIndex >= array.size()){ 
+                    //capacity + _curIndex/2 = newCapacity 
+                    Array<T> newArr(array.size() + _curIndex /2);
+
+                    for(size_t i = 0; i < array.size(); ++i)
+                        newArr[i + 1] = array[i];
+
+                    array.swap(newArr);
+
+                    
+                }else{
+                    // There's room - shift elements right
+                    for (size_t i = _curIndex; i > 0; --i) {
+                        array[i] = array[i - 1];
+                    }
+                }
+
+                array[0] = elem;
+                _curIndex++;
+            }
+
+            void pop_back() {
+                if (_curIndex > 0) {
+                    --_curIndex;
+                    array[_curIndex - 1].~T();
+                    //this does nothing for primitive types but we can always expect them to be primitive
+                }
             }
 
             size_t size() const { return array.size(); }
@@ -92,15 +124,21 @@ namespace MyDses{
     class Stack{
         size_t _capacity;
         size_t _curIndex;
-        DArray<T> _pStack;
+        DArray<T> _stack;
 
         public:
 
-        Stack(size_t capacity) : _capacity(capacity), _curIndex(0), _pStack(capacity){}
-        Stack() : _capacity(0), _curIndex(0), _pStack(){}
+        Stack(size_t capacity) : _capacity(capacity), _curIndex(0), _stack(capacity){}
+        Stack() : _capacity(0), _curIndex(0), _stack(){}
 
         void push(const T& element){
-
+            _stack.add_back(element);
+        }
+        T& top() const{
+            return _stack.last();
+        }
+        void pop(){
+            _stack.pop_back();
         }
 
         size_t size() const{return _capacity;}

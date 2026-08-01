@@ -36,11 +36,11 @@ int main(){
 
     std::cout << "Dynamic arrays[] heap allocation \n";
     MyDses::Vector<int> myDArr(5);
-    myDArr.add(1);
-    myDArr.add(2);
-    myDArr.add(3);
-    myDArr.add(4);
-    myDArr.add(5);
+    myDArr.add_back(1);
+    myDArr.add_back(2);
+    myDArr.add_back(3);
+    myDArr.add_back(4);
+    myDArr.add_back(5);
 
     for(size_t i = 0;i < myArr.size();++i){
         std::cout << myDArr[i] << std::endl;    
@@ -50,7 +50,7 @@ int main(){
     std::cout << "Last elem: " << myDArr.last() << std::endl;
     std::cout << "Currently at the max \n";
 
-    myDArr.add(6);
+    myDArr.add_back(6);
 
     for(size_t i = 0;i < myDArr.size();++i){
         std::cout << myDArr[i] << std::endl;    
