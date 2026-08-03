@@ -62,7 +62,7 @@ namespace MyDses{
             DArray(size_t capacity) : array(capacity), _curIndex(0), _startIndex(0){}
             DArray() : array(0), _curIndex(0), _startIndex(0){}
 
-            //o(1)
+            //o(1) ,o(n) when needing space
             void add_back(const T& elem){
                 if(_curIndex >= array.size()){ 
                     //capacity + _curIndex/2 = newCapacity 
@@ -78,11 +78,11 @@ namespace MyDses{
                     array.swap(newArr);
                 }
 
-                array[(_startIndex + _curIndex) % array.size())] = elem;
+                array[(_startIndex + _curIndex) % array.size()] = elem;
                 _curIndex++;
             }
             
-            //o(n)
+            //o(1) ,o(n) when needing space
             void add_front(const T& elem){
                 if(_curIndex >= array.size()){ 
                     //capacity + _curIndex/2 = newCapacity 
@@ -136,15 +136,15 @@ namespace MyDses{
 
     //LIFO
     template <class T>
-    class Stack{
+    class MStack{
         size_t _capacity;
         size_t _curIndex;
         DArray<T> _stack;
 
         public:
 
-        Stack(size_t capacity) : _capacity(capacity), _curIndex(0), _stack(capacity){}
-        Stack() : _capacity(0), _curIndex(0), _stack(){}
+        MStack<T>(size_t capacity) : _capacity(capacity), _curIndex(0), _stack(capacity){}
+        MStack<T>() : _capacity(0), _curIndex(0), _stack(){}
 
         void push(const T& element){
             _stack.add_back(element);
@@ -163,16 +163,27 @@ namespace MyDses{
 
     //FIFO
     template <class T>
-    class Queue{
+    class MQueue{
         size_t _capacity;
         size_t _curIndex;
         DArray<T> _queue;
 
         public:
 
-        Stack(size_t capacity) : _capacity(capacity), _curIndex(0), _stack(capacity){}
-        Stack() : _capacity(0), _curIndex(0), _stack(){}
+        MQueue(size_t capacity) : _capacity(capacity), _curIndex(0), _queue(capacity){}
+        MQueue() : _capacity(0), _curIndex(0), _queue(){}
+        
+        void push_back(const T& elem){
+            _queue.push_back(elem);
+        }
 
+        T& peek(){
+            return _queue.first();
+        }
+
+        void pop_front(){
+            _queue.pop_front();
+        }
         size_t size() const{return _capacity;}
     };
 }
