@@ -54,26 +54,31 @@ namespace MyDses{
 
     template <class T>
     class DArray {
+        size_t _startIndex;
         size_t _curIndex;
         Array<T> array; 
 
         public:
-            DArray(size_t capacity) : array(capacity), _curIndex(0){}
-            DArray() : array(0), _curIndex(0){}
+            DArray(size_t capacity) : array(capacity), _curIndex(0), _startIndex(0){}
+            DArray() : array(0), _curIndex(0), _startIndex(0){}
 
             //o(1)
             void add_back(const T& elem){
-                if(_curIndex >= array.size() || array.size() <= 0){ 
+                if(_curIndex >= array.size()){ 
                     //capacity + _curIndex/2 = newCapacity 
-                    Array<T> newArr(array.size() + _curIndex/2);
+                    size_t new_capacity = array.size() + _curIndex/2;
 
-                    for(size_t i = 0;i < array.size();++i)
-                        newArr[i] = array[i];
+                    if (new_capacity == 0) new_capacity = 1;  // Minimum capacity
+
+                    Array<T> newArr(new_capacity);
+
+                    for(size_t i = 0;i < _curIndex;++i)
+                        newArr[i] = array[(_startIndex + i) % array.size()];
 
                     array.swap(newArr);
                 }
 
-                array[_curIndex] = elem;
+                array[(_startIndex + _curIndex) % array.size())] = elem;
                 _curIndex++;
             }
             
@@ -81,45 +86,55 @@ namespace MyDses{
             void add_front(const T& elem){
                 if(_curIndex >= array.size()){ 
                     //capacity + _curIndex/2 = newCapacity 
-                    Array<T> newArr(array.size() + _curIndex /2);
+                    size_t new_capacity = array.size() + _curIndex/2;
 
-                    for(size_t i = 0; i < array.size(); ++i)
-                        newArr[i + 1] = array[i];
+                    if (new_capacity == 0) new_capacity = 1;  // Minimum capacity
 
-                    array.swap(newArr);
+                    Array<T> newArr(new_capacity);
 
+                    for(size_t i = 0; i < _curIndex; ++i)
+                        newArr[i] = array[(_startIndex + i) % array.size()];
                     
-                }else{
-                    // There's room - shift elements right
-                    for (size_t i = _curIndex; i > 0; --i) {
-                        array[i] = array[i - 1];
-                    }
+                    _startIndex = 0;
+
+                    array.swap(newArr);                   
                 }
 
-                array[0] = elem;
-                _curIndex++;
+                array[(_startIndex - 1 + array.size()) % array.size()] = elem;
+                _curIndex++;        
+                _startIndex = (_startIndex - 1 + array.size()) % array.size();
             }
-
+            
+            //o(1)
             void pop_back() {
                 if (_curIndex > 0) {
+                    array[(_startIndex + _curIndex - 1) % array.size()].~T();
                     --_curIndex;
-                    array[_curIndex - 1].~T();
-                    //this does nothing for primitive types but we can always expect them to be primitive
+                    //this does nothing for primitive types but we cant always expect them to be primitive
                 }
             }
 
-            size_t size() const { return array.size(); }
-            T& first() {return array[0];}
-            T& last(){return array[array.size()-1];}
+            //o(1)
+            void pop_front(){
+                if (_curIndex > 0) {
+                    array[_startIndex].~T();
+                    _startIndex = (_startIndex + 1) % array.size();  // Just move the start pointer!
+                    --_curIndex;
+                }
+            }
+
+            size_t size() const { return _curIndex; }
+            T& first() {return array[_startIndex];}
+            T& last(){return array[(_startIndex + _curIndex - 1) % array.size()];}
 
             T& operator [](size_t index){
-                if(index >= array.size() || index < 0)throw std::out_of_range("Out of range");
+                if (index >= _curIndex)throw std::out_of_range("Out of range");
 
-                return array[index];
+                return array[(_startIndex + index) % array.size()];
             }
     };
 
-
+    //LIFO
     template <class T>
     class Stack{
         size_t _capacity;
@@ -144,5 +159,20 @@ namespace MyDses{
         size_t size() const{return _capacity;}
 
 
+    };
+
+    //FIFO
+    template <class T>
+    class Queue{
+        size_t _capacity;
+        size_t _curIndex;
+        DArray<T> _queue;
+
+        public:
+
+        Stack(size_t capacity) : _capacity(capacity), _curIndex(0), _stack(capacity){}
+        Stack() : _capacity(0), _curIndex(0), _stack(){}
+
+        size_t size() const{return _capacity;}
     };
 }
