@@ -42,7 +42,7 @@ int main(){
     myDArr.add_back(4);
     myDArr.add_back(5);
 
-    for(size_t i = 0;i < myArr.size();++i){
+    for(size_t i = 0;i < myDArr.size();++i){
         std::cout << myDArr[i] << std::endl;    
     }
 
@@ -57,6 +57,21 @@ int main(){
     }
 
     std::cout << "Dynamicly allocated more space for 6 \n";
+    std::cout << "MLL\n";
+    MyDses::MLinkedList<int> head(myDArr[0]);
+    MyDses::MLinkedList<int>* mover = &head;
+
+    for(size_t i = 1;i < myDArr.size();++i){
+        mover->next = std::make_unique<MyDses::MLinkedList<int>>(myDArr[i]);
+        mover = mover->next.get();
+    }
+
+    MyDses::MLinkedList<int>* print = &head;
+    while(print){
+        std::cout << print->data << std::endl;
+        print = print->next.get();
+    }
+
 
 
     return 0;

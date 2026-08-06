@@ -160,7 +160,6 @@ namespace MyDses{
 
 
     };
-
     //FIFO
     template <class T>
     class MQueue{
@@ -186,4 +185,36 @@ namespace MyDses{
         }
         size_t size() const{return _capacity;}
     };
+
+    template <class T>
+    class MLinkedList{
+        public:
+            T data;
+            std::unique_ptr<MLinkedList> next;
+
+            MLinkedList(const T& data, MLinkedList next){
+                this->data = data;
+                this->next = std::make_unique<MLinkedList>(next);
+            }
+
+            MLinkedList(const T& data){
+                this->data = data;
+                this->next = nullptr;
+            }
+        
+            MLinkedList& operator =(const MLinkedList& other){
+                if(this != &other){
+                    this->data = other.data;
+                    this->next = other.next;
+                    
+
+                    return *this;
+                }
+
+                return *this;
+            }
+            
+        
+    };
+
 }
