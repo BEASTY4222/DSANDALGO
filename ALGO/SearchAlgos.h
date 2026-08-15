@@ -13,10 +13,14 @@ namespace MySearchAlgo{
 
         size_t left = arr[0];
         size_t right = arr.last();
-        
-        size_t middle = std::tolower((right / 2) - left);
+        size_t middle;
+
         for(size_t i{};i < arr.size();++i){
-            
+            middle = std::tolower(letf + (right - left / 2));
+
+            if(middle == target) return middle;
+            if(target > middle) left = middle + 1;
+            else if(target < middle) right = middle - 1; 
         }
 
         return -1;
