@@ -2,6 +2,8 @@
 
 #include "DS/BasicDS.h"
 
+#include <cmath>
+
 namespace MySortingAlgo{
 
 /*
@@ -41,8 +43,45 @@ namespace MySortingAlgo{
 
     }
 
-    void mergeSort(){
+    void mergeSort(MyDses::DArray<int>& arr, int start, int end){
+        if (end - start < 2) return;
 
+        size_t middle = start + (end - start) / 2;;
+
+        mergeSort(arr, start, middle);
+        
+        mergeSort(arr, middle, end);
+        
+
+        return merge(arr, start, middle, end);
+    }
+
+    void merge(MyDses::DArray<int>& arr ,size_t start, size_t mid, size_t end){
+        MyDses::DArray<int> sortedArr(end - start);
+        size_t i = start, j = mid;
+        while(i < mid && j < end){
+            if(arr[i] <= arr[j]){
+                sortedArr.add_back(arr[i]);
+                i++;
+            }else{
+                sortedArr.add_back(arr[j]);
+                j++;
+            }
+        } 
+
+        while (i < mid) {
+            sortedArr.add_back(arr[i]);
+            i++;
+        }
+
+        while (j < end) {
+            sortedArr.add_back(arr[j]);
+            j++;
+        }
+        
+        for (size_t i = 0; i < sortedArr.size(); ++i) {
+            arr[start + i] = sortedArr[i];
+        }
     }
 
     void quickSort(){
