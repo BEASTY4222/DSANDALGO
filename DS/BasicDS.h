@@ -152,6 +152,25 @@ namespace MyDses{
                 }
             }
 
+            void pop_at(size_t index){
+                if(index >= _curIndex) throw std::out_of_range("Out of range");
+                if(index == 0) return pop_front();
+                if(index == _curIndex - 1) return pop_back();
+
+                size_t phys = (_startIndex + index) % array.size();
+                array[phys].~T();
+
+                for(size_t i = index + 1;i < _curIndex;++i){
+                    size_t src = (_startIndex + i) % array.size();
+                    size_t dst = (_startIndex + i - 1) % array.size();
+                    array[dst] = std::move(array[src]);
+                }
+
+                array[(_startIndex + _curIndex - 1) % array.size()].~T();
+
+                _curIndex--;
+            }
+
             size_t size() const { return _curIndex; }
             T& first() {return array[_startIndex];}
             T& last(){return array[(_startIndex + _curIndex - 1) % array.size()];}

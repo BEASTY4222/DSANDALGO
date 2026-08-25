@@ -3,6 +3,7 @@
 #include "DS/BasicDS.h"
 
 #include <cmath>
+#include <climits>
 
 namespace MySortingAlgo{
 
@@ -53,8 +54,24 @@ namespace MySortingAlgo{
         return arr;
     }
 
-    void selectionSort(){
+    MyDses::DArray<int> selectionSort(MyDses::DArray<int>& arr){
+        if(arr.size() < 2)return arr;
 
+        size_t minIndex;
+        MyDses::DArray<int> copy = arr;
+        size_t arrSize = copy.size();
+
+        for(size_t i = 0;i < arrSize - 1;++i){
+            minIndex = i;
+            for(size_t j = i;j < arrSize;++j){
+                if(copy[j] < copy[minIndex]){
+                    minIndex = j;
+                }
+            }
+            std::swap(copy[i], copy[minIndex]);
+        }
+
+        return copy;
     }
 
     void mergeSort(MyDses::DArray<int>& arr, int start, int end){
@@ -69,7 +86,6 @@ namespace MySortingAlgo{
 
         return merge(arr, start, middle, end);
     }
-
     void merge(MyDses::DArray<int>& arr ,size_t start, size_t mid, size_t end){
         MyDses::DArray<int> sortedArr(end - start);
         size_t i = start, j = mid;
