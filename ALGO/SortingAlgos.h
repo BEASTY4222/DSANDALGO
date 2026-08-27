@@ -121,7 +121,6 @@ namespace MySortingAlgo{
         if (pivotIndex > start) quickSort(arr, start, pivotIndex - 1);
         if (pivotIndex < end)   quickSort(arr, pivotIndex + 1, end);
     }
-
     size_t partition(MyDses::DArray<int>& arr, size_t start, size_t end){
         size_t pivot = arr[end];
         // Could underflow if size_t = SIZE_MAX
@@ -137,7 +136,33 @@ namespace MySortingAlgo{
         return i + 1;
     }
 
-    void heapSort(){
+    void heapSort(MyDses::DArray<int>& arr){
+        if(arr.empty() || arr.size() == 1) return;
 
+        size_t arrSize = arr.size();
+        for (int i = (arrSize / 2) - 1; i >= 0; i--) {
+            heapify(arr, arrSize, i);
+        }
+
+        for (int i = arrSize - 1; i > 0; i--) {
+            std::swap(arr[0], arr[i]); // Swap
+            heapify(arr, i, 0); // Heapify root
+        }
+    }
+
+    void heapify(MyDses::DArray<int>& arr, size_t arrSize, int root){
+        size_t largest = root;
+        size_t left = 2*root + 1;
+        size_t right = 2*root + 2;
+        
+        if(left < arrSize && arr[left] > arr[largest])
+            largest = left;
+        if(right < arrSize && arr[right] > arr[largest])
+            largest = right;
+
+        if(largest != root){
+            std::swap(arr[root], arr[largest]);
+            heapify(arr, arrSize, largest);
+        }
     }
 }
