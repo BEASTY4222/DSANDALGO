@@ -74,7 +74,7 @@ namespace MySortingAlgo{
         return copy;
     }
 
-    void mergeSort(MyDses::DArray<int>& arr, int start, int end){
+    void mergeSort(MyDses::DArray<int>& arr, int& start, int& end){
         if (end - start < 2) return;
 
         size_t middle = start + (end - start) / 2;;
@@ -86,7 +86,7 @@ namespace MySortingAlgo{
 
         return merge(arr, start, middle, end);
     }
-    void merge(MyDses::DArray<int>& arr ,size_t start, size_t mid, size_t end){
+    void merge(MyDses::DArray<int>& arr ,size_t& start, size_t& mid, size_t& end){
         MyDses::DArray<int> sortedArr(end - start);
         size_t i = start, j = mid;
         while(i < mid && j < end){
@@ -114,8 +114,27 @@ namespace MySortingAlgo{
         }
     }
 
-    void quickSort(){
+    void quickSort(MyDses::DArray<int>& arr, size_t start, size_t end){
+        if(start >= end || arr.empty())return;
 
+        size_t pivotIndex = partition(arr, start, end);
+        if (pivotIndex > start) quickSort(arr, start, pivotIndex - 1);
+        if (pivotIndex < end)   quickSort(arr, pivotIndex + 1, end);
+    }
+
+    size_t partition(MyDses::DArray<int>& arr, size_t start, size_t end){
+        size_t pivot = arr[end];
+        // Could underflow if size_t = SIZE_MAX
+        int i = (int)start - 1;
+
+        for(size_t j = start;j < end;++j){
+            if(arr[j] < pivot){
+                i++;
+                std::swap(arr[i], arr[j]);
+            }
+        }
+        std::swap(arr[i+1], arr[end]);
+        return i + 1;
     }
 
     void heapSort(){
